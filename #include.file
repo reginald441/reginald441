@@ -1,0 +1,219 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Player
+{
+int playerID;
+string name;
+
+public:
+Player(int playerID, string name);
+string getName();
+int getPlayerID();
+// abstract methods
+virtual string getPlayerPosition() = 0; // pure virtual function
+virtual void play() = 0; // pure virtual function
+virtual string toString();
+
+};
+
+// constructor
+Player::Player(int playerID, string name) : playerID(playerID), name(name)
+{}
+
+// return name of the player
+string Player::getName()
+{
+return name;
+}
+
+// return player id
+int Player::getPlayerID()
+{
+return playerID;
+}
+
+// return description of player
+string Player::toString()
+{
+return "ID: "+to_string(playerID)+" Name: "+name;
+}
+
+class Offense : public Player
+{
+private :
+string position;
+public:
+Offense(int playerID, string name, string position);
+string getPlayerPosition();
+void play();
+string toString();
+};
+
+// constructor
+Offense::Offense(int playerID, string name, string position) : Player(playerID, name), position(position)
+{}
+
+// return player position
+string Offense::getPlayerPosition()
+{
+return position;
+}
+
+// play method
+void Offense::play()
+{
+cout<<"Offense play position : "<<position<<endl;
+}
+
+// return description
+string Offense::toString()
+{
+string str = Player::toString() + " Position : "+position+" Description : Offense";
+return str;
+}
+
+class Defense : public Player
+{
+private :
+string position;
+public:
+Defense(int playerID, string name, string position);
+string getPlayerPosition();
+void play();
+string toString();
+};
+
+// constructor
+Defense::Defense(int playerID, string name, string position) : Player(playerID, name), position(position)
+{}
+
+// return player position
+string Defense::getPlayerPosition()
+{
+return position;
+}
+
+// play method
+void Defense::play()
+{
+cout<<"Defense play position : "<<position<<endl;
+}
+
+// return description
+string Defense::toString()
+{
+string str = Player::toString() + " Position : "+position+" Description : Defense";
+return str;
+}
+
+class SpecialTeams : public Player
+{
+private:
+string position;
+
+public:
+SpecialTeams(int playerID, string name, string position);
+string getPlayerPosition();
+void play();
+string toString();
+};
+
+// constructor
+SpecialTeams::SpecialTeams(int playerID, string name, string position) : Player(playerID, name), position(position)
+{}
+
+// return player position
+string SpecialTeams::getPlayerPosition()
+{
+return position;
+}
+
+// play method
+void SpecialTeams::play()
+{
+cout<<"SpecialTeams play position : "<<position<<endl;
+}
+
+// return description
+string SpecialTeams::toString()
+{
+string str = Player::toString() + " Position : "+position+" Description : Special Teams";
+return str;
+
+}
+
+
+int main()
+{
+vector<Player*> players; // create empty vector of players
+int choice, playerID;
+string name, position;
+
+// loop that continues till the user wants
+do
+{
+cout<<endl<<"1. Add Offense Player"<<endl;
+cout<<"2. Add Defense Player"<<endl;
+cout<<"3. Add Special Teams Player"<<endl;
+cout<<"4. Quit"<<endl;
+cout<<"Enter your choice(1-4) : ";
+cin>>choice;
+
+// add offense player
+if(choice == 1)
+{
+cout<<"Player id : ";
+cin>>playerID;
+cout<<"Name: ";
+cin.ignore(100,'\n'); // ignore the ‘\n’ left by cin
+getline(cin,name);
+cout<<"Offense position (QuarterBack / Wide Receiver / Tight End / Running Back / Offensive Lineman) : ";
+getline(cin, position);
+players.push_back(new Offense(playerID, name, position));
+
+}
+// add defense player
+else if(choice == 2)
+{
+cout<<"Player id : ";
+cin>>playerID;
+cin.ignore(100,'\n');
+cout<<"Name: ";
+getline(cin,name);
+cout<<"Defense position (Defensive Lineman / Linebacker / Defensive Back) : ";
+getline(cin, position);
+players.push_back(new Defense(playerID, name, position));
+}
+// add special teams player
+else if(choice == 3)
+{
+cout<<"Player id : ";
+cin>>playerID;
+cin.ignore(100,'\n');
+cout<<"Name: ";
+getline(cin,name);
+cout<<"Special Teams position (Kicker / Holder / Punter / Returner) : ";
+getline(cin, position);
+players.push_back(new SpecialTeams(playerID, name, position));
+}
+else if(choice != 4)
+cout<<"Invalid choice";
+cout<<endl;
+}while(choice != 4);
+
+// display the total number of players in the team and their details
+cout<<"Number of players in the team : "<<players.size()<<endl;
+if(players.size() > 0)
+{
+cout<<"Player details : "<<endl;
+for(int i=0;i<players.size();i++)
+{
+cout<<players[i]->toString()<<endl;
+}
+}
+
+return 0;
+}
